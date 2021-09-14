@@ -1,5 +1,10 @@
 module KitMSA
 
-greet() = print("Hello World!")
+using DelimitedFiles
+using FastaIO
+using StatsBase
+using Random
 
-end # module
+include("msa_analysis.jl")
+
+end 
