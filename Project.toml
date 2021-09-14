@@ -1,0 +1,12 @@
+name = "KitMSA"
+uuid = "e1e610c1-b74d-45c6-9a0f-61473e47a018"
+authors = ["Matteo Bisardi <matteo.bisardi@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"
+Distances = "b4f34e82-e78d-54a5-968a-f98e89d6e8f7"
+FastaIO = "a0c94c4b-ebed-5953-b5fc-82fe598ac79f"
+MultivariateStats = "6f286f6a-111f-5878-ab1e-185364afe411"
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
