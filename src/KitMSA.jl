@@ -16,6 +16,8 @@ using DelimitedFiles
 using FastaIO
 using StatsBase
 using Random
+using GZip
+
 
 include("clean_MSA.jl")
 include("read_write_MSA.jl")
