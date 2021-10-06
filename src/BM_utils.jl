@@ -108,30 +108,32 @@ function extract_params(path_par::AbstractString; q::Integer = 21)
 	return h, J
 end
 
-function extract_params(g::DCAgraph)
-    N = g.L
-    q = g.q
-    J = Array{Float64}(undef, q, q, N, N)
-    for i in 1:N
-        for j in 1:N
-            for a in 1:q
-                aa = amino_plus(a)
-                for b in 1:q
-                    bb = amino_plus(b)
-                    J[a, b, i, j ]= g.J[(i .- 1)*q .+ aa, (j .- 1)*q .+ bb]
-                end
-            end
-        end
-    end
-    h = Array{Float64}(undef, q, N)
-    for i in 1:N
-        for a in 1:q
-            aa = amino_plus(a)
-            h[a, i] = g.h[(i .- 1)*g.q .+ aa]
-    end
-    end
-    return h, J
-end
+
+#This function needs DCATools to import redefinition of .* and other operators.
+#function extract_params(g::DCAgraph)
+#    N = g.L
+ #   q = g.q
+ #   J = Array{Float64}(undef, q, q, N, N)
+ #   for i in 1:N
+ #       for j in 1:N
+ #           for a in 1:q
+ #               aa = amino_plus(a)
+ #               for b in 1:q
+ #                   bb = amino_plus(b)
+ #                   J[a, b, i, j ]= g.J[(i .- 1)*q .+ aa, (j .- 1)*q .+ bb]
+ #               end
+ #           end
+ #       end
+ #   end
+ #   h = Array{Float64}(undef, q, N)
+ #   for i in 1:N
+ #       for a in 1:q
+ #           aa = amino_plus(a)
+ #           h[a, i] = g.h[(i .- 1)*g.q .+ aa]
+ #   end
+ #   end
+ #   return h, J
+#end
 
 
 ######################################################

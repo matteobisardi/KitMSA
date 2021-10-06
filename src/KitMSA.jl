@@ -17,7 +17,6 @@ using FastaIO
 using StatsBase
 using Random
 using GZip
-using DCATools
 
 
 include("clean_MSA.jl")

@@ -33,14 +33,6 @@ git-tree-sha1 = "8e695f735fca77e9708e795eda62afdb869cbb70"
 uuid = "e66e0078-7015-5450-92f7-15fbd957f2ae"
 version = "0.3.4+0"
 
-[[DCATools]]
-deps = ["DelimitedFiles", "Distributed", "FastaIO", "LinearAlgebra", "Printf", "Random", "Statistics"]
-git-tree-sha1 = "accaddbb869c1989d801b585258eda156e3963eb"
-repo-rev = "master"
-repo-url = "https://github.com/PierreBarrat/DCATools.git"
-uuid = "ab32c484-f013-491b-b55b-7691c773516c"
-version = "0.1.0"
-
 [[DataAPI]]
 git-tree-sha1 = "bec2532f8adb82005476c141ec23e921fc20971b"
 uuid = "9a962f9c-6df0-11e9-0e5d-c546b8b5ee8a"

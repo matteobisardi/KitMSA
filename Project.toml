@@ -4,7 +4,6 @@ authors = ["Matteo Bisardi <matteo.bisardi@gmail.com>"]
 version = "0.1.0"
 
 [deps]
-DCATools = "ab32c484-f013-491b-b55b-7691c773516c"
 DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"
 Distances = "b4f34e82-e78d-54a5-968a-f98e89d6e8f7"
 FastaIO = "a0c94c4b-ebed-5953-b5fc-82fe598ac79f"
