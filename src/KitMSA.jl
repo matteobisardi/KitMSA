@@ -5,7 +5,7 @@ export	remove_gapped_cols,
 		remove_gapped_sequences, 
 		remove_close_seqs,
 		compute_energy_single_sequence,
-		extract_params
+		extract_params,
 		fasta2matrix,
 		num2lettr,
 		lettr2num,
