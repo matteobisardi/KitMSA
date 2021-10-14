@@ -1,6 +1,6 @@
 ######################################################
 """
-	read_par_BM(path::AbstractString, q::Integer = 21)
+    read_par_BM(path::AbstractString, q::Integer = 21)
     read_par_BM(path::GZipStream, q::Integer = 21)
 
 
@@ -76,7 +76,7 @@ function read_par_BM(path::GZipStream, q::Integer = 21)
 end
 
 
-
+######################################################
 """
     function extract_params(path_par::AbstractString; q::Integer = 21)
     function extract_params(g::DCAgraph)
@@ -132,7 +132,7 @@ end
  #           h[a, i] = g.h[(i .- 1)*g.q .+ aa]
  #   end
  #   end
- #   return h, J
+ #   return SeqEvol.set_max_field_to_0(h), J
 #end
 
 
@@ -194,7 +194,7 @@ end
  
 ###################################################### 
 """
-    function compute_energy_single_sequence(h::Array{Float64,2},
+    compute_energy_single_sequence(h::Array{Float64,2},
                                         J::Array{Float64,4},
                                         S::Vector)
 
@@ -219,17 +219,84 @@ end
 
 function compute_energy_single_sequence(h::Array{Float64,2},
                                         J::Array{Float64,4},
-                                        S::Vector)
-    N = size(h)[2]
-    q = size(h)[1]
+                                        S::Array{Int64, 1})
+    q, N = size(h)
     E = 0.0
-    for i = 1:N
-        E -= h[S[i],i]
-        for j = (i+1):N
-                        E -= J[S[i],S[j],i,j]
-                end
+    @fastmath for i = 1:N
+         @inbounds E -= h[S[i],i]
+         @fastmath for j = (i+1):N
+             @inbounds E -= J[S[j],S[i],j,i]
         end
-return E
+    end
+    return E
+end
+
+
+###################################################### 
+"""
+	compute_delta_energy(h::Array{Float64,2},
+                              J::Array{Float64,4},
+                              S::Array{Int8,1}, 
+                              ref::Array{Int8, 1})
+    
+
+    (h, J, S, ref) --> deltaE
+        
+    USE:
+    Given fields and couplings of a Potts models, and two sequence
+    returns the difference in energy.
+
+
+    INPUT:
+    "h": fields in qxN format
+    
+    "J": coulings in qxqxNxN format
+
+    "S": sequence in number format (" 1 2 .. 21 <--> A C -  ")
+ 	
+    "ref": sequence in number format
+	 
+
+    OUTPUT:
+
+    Energy[S] - Energy[ref]
+"""
+
+function compute_delta_energy(h::Array{Float64,2},
+                              J::Array{Float64,4},
+                              S::Array{Int8,1}, 
+                              ref::Array{Int8, 1})
+    
+    q, N = size(h)
+    E = 0.0
+    index_v = collect(1:N)
+    bool_common = Array{Bool}(undef, N)
+    ll = 0
+    @fastmath for val in S
+        ll+=1
+        @inbounds bool_common[ll] = (val == ref[ll])
+    end
+    common = index_v[bool_common]
+    non_common = index_v[(!).(bool_common)]
+    
+    @fastmath for i in non_common
+         @inbounds  E -= (h[S[i],i] - h[ref[i],i])
+         for j = 1:N
+            if j > i
+              @inbounds  E -= (J[S[j],S[i],j,i] - J[ref[j],ref[i],j,i] )
+            end
+        end
+    end
+    
+    @fastmath for i in common
+         for j in non_common
+            if j > i
+              @inbounds  E -= (J[S[j],S[i],j,i] - J[ref[j],ref[i],j,i] )
+            end
+        end
+    end
+    
+    return E
 end
 
 
