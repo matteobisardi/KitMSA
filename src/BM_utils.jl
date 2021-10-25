@@ -194,9 +194,9 @@ end
  
 ###################################################### 
 """
-    compute_energy_single_sequence(h::Array{Float64,2},
-                                        J::Array{Float64,4},
-                                        S::Vector)
+    energy(h::Array{Float64,2},
+           J::Array{Float64,4},
+           S::Array{<:Integer, 1})
 
     (h, J, S) --> E
         
@@ -217,9 +217,9 @@ end
     Energy
 """
 
-function compute_energy_single_sequence(h::Array{Float64,2},
-                                        J::Array{Float64,4},
-                                        S::Array{Int64, 1})
+function energy(h::Array{Float64,2},
+                J::Array{Float64,4},
+                S::Array{<:Integer, 1})
     q, N = size(h)
     E = 0.0
     @fastmath for i = 1:N
@@ -234,10 +234,10 @@ end
 
 ###################################################### 
 """
-	compute_delta_energy(h::Array{Float64,2},
+	delta_energy(h::Array{Float64,2},
                               J::Array{Float64,4},
-                              S::Array{Int8,1}, 
-                              ref::Array{Int8, 1})
+                              S::Array{<:Integer,1}, 
+                              ref::Array{<:Integer, 1})
     
 
     (h, J, S, ref) --> deltaE
@@ -262,10 +262,10 @@ end
     Energy[S] - Energy[ref]
 """
 
-function compute_delta_energy(h::Array{Float64,2},
+function delta_energy(h::Array{Float64,2},
                               J::Array{Float64,4},
-                              S::Array{Int8,1}, 
-                              ref::Array{Int8, 1})
+                              S::Array{<:Integer,1}, 
+                              ref::Array{<:Integer, 1})
     
     q, N = size(h)
     E = 0.0

@@ -247,5 +247,69 @@ function remove_gapped_cols(fastapath::AbstractString; outpath::AbstractString =
 end
 
 
+##############################################################
+"""
+    function afa2fasta(path_in::String, path_out::String = "")
+
+    (path_in, path_out) --> 
+        
+    USE:
+    Given the path of a MSA in .afa format, that is with insertions and gaps,
+    writes in "path_out" the same MSA by removing insertions. 
+
+
+    INPUT: 
+    "path_in": path of starting .afa file
+
+    "path_out": path of cleaned (removed gaps) MSA
+
+    OUTPUT:
+
+"""
+
+function afa2fasta(path_in::String, path_out::String = "")
+    path_out == "" && (path_out = join( split(path_in, '.')[1:end-1], "."  )*"_removed_dels.fasta")
+    f = FastaReader(path_in)
+    for (desc, seq_string) in f
+        seq_clean = remove_dels(seq_string)
+        writefasta(path_out, [(desc, seq_clean)], "a")
+    end
+    close(f)
+end
+
+
+
+##############################################################
+"""
+    function remove_dels(string_wdel::String)
+
+    (string_wdel) --> string without lowecase letters
+        
+    USE:
+    Given a sequence with lowercase letters (insertions) and '.'
+    returns the same string without them.
+
+
+    INPUT: 
+    "string_wdel": string with insertions 
+
+    OUTPUT:
+
+"""
+
+
+function remove_dels(string_wdel::String)
+    clean_string = ""
+    for lettr in string_wdel
+        if islowercase(lettr)
+            nothing
+        elseif (lettr == '.')
+            nothing
+        else
+            clean_string = string(clean_string, lettr)
+        end 
+    end
+    return clean_string
+end
 
 
