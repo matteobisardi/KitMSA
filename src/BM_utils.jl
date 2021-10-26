@@ -197,12 +197,15 @@ end
     energy(h::Array{Float64,2},
            J::Array{Float64,4},
            S::Array{<:Integer, 1})
+    energy(h::Array{Float64,2},
+           J::Array{Float64,4},
+           S::Array{<:Integer, 2})
 
     (h, J, S) --> E
         
     USE:
     Given fields and couplings of a Potts models,
-    returns its energy
+    returns its energy.
 
 
     INPUT:
@@ -211,9 +214,9 @@ end
     "J": coulings in qxqxNxN format
 
     "S": sequence in number format (" 1 2 .. 21 <--> A C -  ")
+    "S": MSA in number format (" 1 2 .. 21 <--> A C -  ")
 
     OUTPUT:
-
     Energy
 """
 
@@ -230,6 +233,23 @@ function energy(h::Array{Float64,2},
     end
     return E
 end
+
+
+function energy(h::Array{Float64,2},
+                J::Array{Float64,4},
+                S::Array{<:Integer, 2})
+    q, N = size(h)
+    M, N = size(S)
+    
+    E = zeros(M)
+    for i in 1:M
+      E[i] = energy(h, J, MSA[i, :])
+    end
+
+    return E
+end
+
+
 
 
 ###################################################### 

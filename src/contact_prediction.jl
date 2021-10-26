@@ -205,4 +205,59 @@ end
 ;
 
 
+##############################################################
+"""
+    function PPV(scores::Array{Float64,2}, distances::Array{Float64,2}; amino_dist = 4, atom_dist = 8)
+
+    (scores, distances) --> PPV
+        
+    USE:
+    Given a list of residue pairs with a score (arbitrarly defined) and a list of experimental residue distances
+    returns the fraction of pairs - out of the highest scoring ones - that are considered "contacts".
+    The definition of contacts depends on linear amino acid distance and physical distance between residues.
+
+    INPUT:
+    "scores": list of protein positions with a score
+    "distances": list of protein positions with physical distance
+    "amino_dist": threshold in terms of linear amino acid distance
+    "atom_dist": threshold in terms of physical distance
+
+    OUTPUT:
+    PPV vector
+
+"""
+
+
+function PPV(scores::Array{Float64,2}, distances::Array{Float64,2}; amino_dist = 4, atom_dist = 8)
+    if size(scores[1,:],1)!=3 || size(distances[1,:],1)!=3
+        error("contactprediction.jl - PPV: `scores` and `distances` should be in the format `i j value`.")
+    end
+
+    scores = sortslices(scores, dims=1, rev=true, by=x->x[3])
+    d = Dict{Tuple{Float64,Float64},Float64}()
+    for l in 1:size(distances,1)
+        d[(distances[l,1], distances[l,2])] = distances[l,3]
+    end
+    tp = 0
+    np = 0
+    TP = []
+    cc=0
+    for r in 1:size(scores,1)
+        if abs(scores[r,1] - scores[r,2]) > amino_dist && get(d, (scores[r,1], scores[r,2]), -1.)>=0.
+            np +=1
+            if d[(scores[r,1], scores[r,2])]<atom_dist
+                tp+=1
+            else
+                # cc<10?println("$(scores[r,1]), $(scores[r,2])"):Void
+                cc+=1
+            end
+            push!(TP,tp/np)
+        end
+    end
+
+    return TP
+end
+
+
+
 
