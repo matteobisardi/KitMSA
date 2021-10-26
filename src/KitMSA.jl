@@ -15,8 +15,6 @@ include("BM_utils.jl")
 include("contact_prediction.jl")
 
 
-
-
 cod2amino = Dict( "ATA" => Int8(8), "ATC" => Int8(8), "ATT"=> Int8(8), "ATG"=> Int8(11), 
         "ACA"=>Int8(17), "ACC"=>Int8(17), "ACG"=>Int8(17), "ACT"=> Int8(17), 
         "AAC"=>Int8(12), "AAT"=>Int8(12), "AAA"=>Int8(9), "AAG"=>Int8(9), 
@@ -44,5 +42,6 @@ for amino in 1:21
     amino2cod[amino] = codons
 end
 
+export cod2amino, amino2cod
 
 end 
