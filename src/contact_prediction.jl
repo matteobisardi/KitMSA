@@ -1,3 +1,5 @@
+export read_non_aligned_sequence, write_mapped_contacts, PPV
+
 ##############################################################
 """
     function read_non_aligned_sequence(seq::String)
@@ -89,6 +91,7 @@ end
 ##############################################################
 """
     function write_mapped_contacts(afa::String, old_distances_path:String; path_out::String = "")
+    function write_mapped_contacts(afa::String, old_distances::Array{Float64, 2}; path_out::String = "")
 
     (afa, old_distances_path, path_out) --> Nothing
         
@@ -98,7 +101,10 @@ end
 
  	INPUT:
     "afa": amino acid sequence with insertions 
+
     "old_distance_path": path of amino acid distances from crystal data
+    "old_distances": array with pairs of positions and residue distances
+
     "path_out": output path, if not declared will be the same of "old_distances_path"
 
     OUTPUT:
@@ -143,28 +149,6 @@ The gaps in the model-aligned sequence are  $(l_gaps).")
     path_out =  path_out == "" ? join(split(old_distances_file, '.')[1:end-1], '.')*"_mapped_model.txt" : path_out
     writedlm(path_out, new_distances)
 end
-;
-
-
-##############################################################
-"""
-    function write_mapped_contacts(afa::String, old_distances::Array{Float64, 2}; path_out::String = "")
-
-    (afa, old_distances, path_out) --> Nothing
-        
-    USE:
-    Given a .afa sequence with insertions aligned to the distances file
-    writes a new distance file with mapped position numbers. 
-
- 	INPUT:
-    "afa": amino acid sequence with insertions 
-    "old_distancew": array with pairs of positions and residue distances
-    "path_out": output path, if not declared will be the same of the old distances
-
-    OUTPUT:
-    Nothing
-
-"""
 
 
 function write_mapped_contacts(afa::String, old_distances::Array{Float64, 2}; path_out::String = "")

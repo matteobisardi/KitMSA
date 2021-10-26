@@ -1,4 +1,4 @@
-export energy
+export extract_params, energy, delta_energy
 
 ######################################################
 """
