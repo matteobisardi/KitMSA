@@ -3,8 +3,6 @@ module KitMSA
 export	remove_gapped_cols, 
 		remove_gapped_sequences, 
 		remove_close_seqs,
-		compute_energy_single_sequence,
-		compute_delta_energy,
 		extract_params,
 		fasta2matrix,
 		num2lettr,
@@ -12,7 +10,10 @@ export	remove_gapped_cols,
 		vec2string,
 		string2vec,
 		afa2fasta,
-		write_mapped_contacts
+		write_mapped_contacts,
+		PPV
+
+
 		
 
 using DelimitedFiles
