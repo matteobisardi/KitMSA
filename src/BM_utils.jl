@@ -1,3 +1,5 @@
+export energy
+
 ######################################################
 """
     read_par_BM(path::AbstractString, q::Integer = 21)
