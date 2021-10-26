@@ -100,7 +100,7 @@ end
 
 
 function extract_params(path_par::AbstractString; q::Integer = 21)
-	!isfile(path_par) && error("Error: the file \"$(path_params)\" does not exist. Please check the spelling or the folder path.")
+	!isfile(path_par) && error("Error: the file \"$(path_par)\" does not exist. Please check the spelling or the folder path.")
 	file = GZip.open(path_par)
 	h, J = read_par_BM(file, q)
 	h = set_max_field_to_0(h)
@@ -223,9 +223,9 @@ function energy(h::Array{Float64,2},
     q, N = size(h)
     E = 0.0
     @fastmath for i = 1:N
-         @inbounds E -= h[S[i],i]
+         E -= h[S[i],i]
          @fastmath for j = (i+1):N
-             @inbounds E -= J[S[j],S[i],j,i]
+             E -= J[S[j],S[i],j,i]
         end
     end
     return E
