@@ -71,7 +71,7 @@ function fasta2matrix(filename::AbstractString; max_gap_fraction = 1)
     @assert seqid == length(seqs) + 1
 
     close(f)
-
+    size(Z)[2] == 1 && return Z[:, 1]' 
     return Z'
 end
 
