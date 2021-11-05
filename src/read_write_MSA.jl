@@ -1,4 +1,4 @@
-export fasta2matrix
+export fasta2matrix, letter2num
 
 ##############################################################
 
