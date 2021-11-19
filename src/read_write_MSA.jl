@@ -74,6 +74,7 @@ function fasta2matrix(filename::AbstractString; max_gap_fraction = 1)
     @assert seqid == length(seqs) + 1
 
     close(f)
+
     size(Z)[2] == 1 && return Z[:, 1]
     return Z'
 end
@@ -166,12 +167,11 @@ end
 
 ##############################################################
 """
-	write_single_muts_MSA(path_wt :: AbstractString)
-	write_single_muts_MSA(wt :: Array{:<Integer, 1})
+	write_single_muts_MSA(path_wt::AbstractString, fitness_wt::Array{Union{Missing, Float64}}, 
+			dir_out::AbstractString = "", wt_name::AbstractString = "WT")
+	write_single_muts_MSA(wt::Array{<:Integer, 1}, fitness_wt::Array{Union{Missing, Float64}}, 
+			dir_out::AbstractString, wt_name::AbstractString = "WT")
 
-    Takes as input a string (representing amino acids)
-    and returns a vector of numbers, the corresponding number representation. 
-    In this case with the convention "1 2 .. 21" <==> "A C .. -"
 """
 
 #--------------------------------------------------------
@@ -208,8 +208,31 @@ end
 
 #--------------------------------------------------------
 
-function write_single_muts_MSA(wt::Array{<:Integer, 1})
-	return 0
-end
+function write_single_muts_MSA(wt::Array{<:Integer, 1}, fitness_wt::Array{Union{Missing, Float64}}, 
+			dir_out::AbstractString, wt_name::AbstractString = "WT")
+	
+	path_MSA_out = joinpath(dir_out, "single_muts_MSA_$(wt_name).fasta")
+	path_fit_out = joinpath(dir_out, "single_muts_fitness_$(wt_name).fit")
+	vec_fit = []
+	k = 0
+	FastaWriter(path_MSA_out, "w") do file
+	    writeentry(file, "$k | $(wt_name)", vec2string(wt))
+	    for i in [pos for (pos, amino) in enumerate(wt) if amino!= 21]
+	        mutant = copy(wt)
+	        for amino in 1:20
+	            mutant[i] = amino
+	            new_amino = num2letter(mutant[i])
+	            old_amino = num2letter(wt[i])
+	            if !ismissing(fitness_wt[(i-1)*20 + amino]) && (amino != wt[i])
+	                k+=1
+	                append!(vec_fit, fitness_wt[(i-1)*20 + amino])
+	                writeentry(file, "$k | $(old_amino)$(i)$(new_amino)", vec2string(mutant))
+	            end
+	        end
+	    end
+	end
 
+	pushfirst!(vec_fit, 0)
+	writedlm(path_fit_out, vec_fit)
+end
 
