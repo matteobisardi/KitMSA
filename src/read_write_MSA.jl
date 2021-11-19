@@ -184,9 +184,9 @@ function write_single_muts_MSA(path_wt::AbstractString, fitness_wt::Array{Union{
 	path_MSA_out = joinpath(dir_out, "single_muts_MSA_$(wt_name).fasta")
 	path_fit_out = joinpath(dir_out, "single_muts_fitness_$(wt_name).fit")
 
+	k = 0
 	FastaWriter(path_MSA_out, "w") do file
-	    k = 0
-	    writeentry(file, "$k | wt", vec2string(wt))
+	    writeentry(file, "$k | $(wt_name)", vec2string(wt))
 	    for i in [pos for (pos, amino) in enumerate(wt) if amino!= 21]
 	        mutant = copy(wt)
 	        for amino in 1:20
