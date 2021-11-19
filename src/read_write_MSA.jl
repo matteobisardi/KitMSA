@@ -202,8 +202,6 @@ function write_single_muts_MSA(path_wt::AbstractString, fitness_wt::Array{Union{
 	end
 
 	vec_fit = [val for val in fitness_wt if (!ismissing(val)) && !iszero(val) ]
-	length(vec_fit) != k && error("BoundsError: the fitness vector and the list of mutants have different lengths: 
-		length(fitness_vec) = $(length(vec_fit)), length(list of mutants) = $(k)")
 	pushfirst!(vec_fit, 0)
 	writedlm(path_fit_out, vec_fit)
 end
