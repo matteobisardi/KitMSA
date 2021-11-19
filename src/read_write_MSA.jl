@@ -180,7 +180,7 @@ function write_single_muts_MSA(path_wt::AbstractString, fitness_wt::Array{Union{
 			dir_out::AbstractString = "", wt_name::AbstractString = "WT")
 	
 	wt = fasta2matrix(path_wt)
-	dir_out == "" && (dir_out = (*).(split(path_out, "/")[1:end-1])
+	dir_out == "" && (  dir_out = (*).(split(path_wt, "/")[1:end-1])  )
 	path_MSA_out = joinpath(dir_out, "single_muts_MSA_$(wt_name).fasta")
 	path_fit_out = joinpath(dir_out, "single_muts_fitness_$(wt_name).fit")
 
@@ -195,13 +195,15 @@ function write_single_muts_MSA(path_wt::AbstractString, fitness_wt::Array{Union{
 	            old_amino = num2letter(wt[i])
 	            if !ismissing(fitness_wt[(i-1)*20 + amino]) && (amino != wt[i])
 	                k+=1
-	                writeentry(file, "$k | $(old_amino)$(i)$(new_amino) ", vec2string(mutant))
+	                writeentry(file, "$k | $(old_amino)$(i)$(new_amino)", vec2string(mutant))
 	            end
 	        end
 	    end
 	end
 
-	vec_fit = [val for val in fitness_NDM if (!ismissing(val)) && !iszero(val) ]
+	vec_fit = [val for val in fitness_wt if (!ismissing(val)) && !iszero(val) ]
+	length(vec_fit) != k && error("BoundsError: the fitness vector and the list of mutants have different lengths: 
+		length(fitness_vec) = $(length(vec_fit)), length(list of mutants) = $(k)")
 	pushfirst!(vec_fit, 0)
 	writedlm(path_fit_out, vec_fit)
 end
