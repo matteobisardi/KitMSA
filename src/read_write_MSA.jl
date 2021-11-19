@@ -193,7 +193,7 @@ end
 #--------------------------------------------------------
 
 function write_single_muts_MSA(path_wt::AbstractString, fitness_wt::Array{Union{Missing, Float64}}, 
-			dir_out::AbstractString = "", wt_name::AbstractString = "WT")
+			dir_out::AbstractString = ""; wt_name::AbstractString = "WT")
 	
 	wt = fasta2matrix(path_wt)
 	dir_out == "" && (  dir_out = (*).(split(path_wt, "/")[1:end-1])  )
@@ -225,7 +225,7 @@ end
 #--------------------------------------------------------
 
 function write_single_muts_MSA(wt::Array{<:Integer, 1}, fitness_wt::Array{Union{Missing, Float64}}, 
-			dir_out::AbstractString, wt_name::AbstractString = "WT")
+			dir_out::AbstractString; wt_name::AbstractString = "WT")
 	
 	path_MSA_out = joinpath(dir_out, "single_muts_MSA_$(wt_name).fasta")
 	path_fit_out = joinpath(dir_out, "single_muts_fitness_$(wt_name).fit")
@@ -256,7 +256,7 @@ end
 #--------------------------------------------------------
 
 
-function write_my_test(path_wt::AbstractString, fitness_wt::Array{Any, 2}, 
+function write_single_muts_MSA(path_wt::AbstractString, fitness_wt::Array{Any, 2}, 
 			dir_out::AbstractString = ""; wt_name::AbstractString = "WT")
 	
 	wt = fasta2matrix(path_wt)
@@ -293,7 +293,7 @@ end
 
 #--------------------------------------------------------
 
-function write_my_test(wt::Array{<:Integer, 1}, fitness_wt::Array{Any, 2}, 
+function write_single_muts_MSA(wt::Array{<:Integer, 1}, fitness_wt::Array{Any, 2}, 
 			dir_out::AbstractString = ""; wt_name::AbstractString = "WT")
 	
 	dir_out == "" && (  dir_out = (*).(split(path_wt, "/")[1:end-1])  )
