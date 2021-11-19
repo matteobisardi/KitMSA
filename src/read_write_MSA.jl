@@ -1,4 +1,4 @@
-export fasta2matrix, letter2num
+export fasta2matrix, letter2num, num2letter
 
 ##############################################################
 ##############################################################
@@ -183,7 +183,7 @@ function write_single_muts_MSA(path_wt::AbstractString, fitness_wt::Array{Union{
 	dir_out == "" && (  dir_out = (*).(split(path_wt, "/")[1:end-1])  )
 	path_MSA_out = joinpath(dir_out, "single_muts_MSA_$(wt_name).fasta")
 	path_fit_out = joinpath(dir_out, "single_muts_fitness_$(wt_name).fit")
-
+	vec_fit = []
 	k = 0
 	FastaWriter(path_MSA_out, "w") do file
 	    writeentry(file, "$k | $(wt_name)", vec2string(wt))
@@ -195,6 +195,7 @@ function write_single_muts_MSA(path_wt::AbstractString, fitness_wt::Array{Union{
 	            old_amino = num2letter(wt[i])
 	            if !ismissing(fitness_wt[(i-1)*20 + amino]) && (amino != wt[i])
 	                k+=1
+	                append!(vec_fit, fitness_wt[(i-1)*20 + amino])
 	                writeentry(file, "$k | $(old_amino)$(i)$(new_amino)", vec2string(mutant))
 	            end
 	        end
