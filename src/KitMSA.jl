@@ -10,7 +10,6 @@ using GZip
 
 include("clean_MSA.jl")
 include("read_write_MSA.jl")
-include("MSA_analysis.jl")
 include("BM_utils.jl")
 include("contact_prediction.jl")
 
