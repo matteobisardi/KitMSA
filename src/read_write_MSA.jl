@@ -75,6 +75,7 @@ function fasta2matrix(filename::AbstractString; max_gap_fraction = 1)
 
     close(f)
     @show size(Z)
+    println("ciaooo")
     size(Z)[2] == 1 && return Z[:, 1]
     return Z'
 end
