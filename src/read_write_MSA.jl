@@ -210,7 +210,7 @@ end
 
 #--------------------------------------------------------
 
-function write_single_muts_MSA(wt::Array{:<Integer, 1})
+function write_single_muts_MSA(wt::Array{<:Integer, 1})
 	return 0
 end
 
