@@ -172,6 +172,22 @@ end
 	write_single_muts_MSA(wt::Array{<:Integer, 1}, fitness_wt::Array{Union{Missing, Float64}}, 
 			dir_out::AbstractString, wt_name::AbstractString = "WT")
 
+	
+        
+    USE:
+    Given a sequence, it returns all single mutations in a MSA fashon.
+
+
+    INPUT: 
+    "fitness_wt": if it is a 1d vector is must contain missings for missing mutations
+    			  and should cover only the non gapped positions
+
+    			  if it is 2d vector the first column must show the position, the second the mutation
+    			  and the third the fitness value
+
+    OUTPUT: writes a .fasta and a .fit file in the "dir_out" folder
+
+
 """
 
 #--------------------------------------------------------
@@ -236,3 +252,77 @@ function write_single_muts_MSA(wt::Array{<:Integer, 1}, fitness_wt::Array{Union{
 	writedlm(path_fit_out, vec_fit)
 end
 
+
+#--------------------------------------------------------
+
+
+function write_my_test(path_wt::AbstractString, fitness_wt::Array{Any, 2}, 
+			dir_out::AbstractString = ""; wt_name::AbstractString = "WT")
+	
+	wt = fasta2matrix(path_wt)
+	dir_out == "" && (  dir_out = (*).(split(path_wt, "/")[1:end-1])  )
+	path_MSA_out = joinpath(dir_out, "single_muts_MSA_$(wt_name).fasta")
+	path_fit_out = joinpath(dir_out, "single_muts_fitness_$(wt_name).fit")
+	vec_fit = []
+
+    l = 0
+	FastaWriter(path_MSA_out, "w") do file
+	    writeentry(file, "0 | $(wt_name)", vec2string(wt))
+        for k in 1:size(fitness_wt, 1)
+            
+	        mutant = copy(wt)
+            pos = fitness_wt[k, 1]
+            
+            old_amino_lettr = num2letter(wt[pos])
+            new_amino_lettr = fitness_wt[k, 2][1]
+            new_amino_num = letter2num(new_amino_lettr)
+            
+            mutant[pos] = new_amino_num
+            
+            if (new_amino_num != wt[pos])
+                l +=1
+                append!(vec_fit, fitness_wt[k, 3])
+                writeentry(file, "$l | $(old_amino_lettr)$(pos)$(new_amino_lettr)", vec2string(mutant))
+            end
+	    end
+	end
+
+	pushfirst!(vec_fit, 0)
+	writedlm(path_fit_out, vec_fit)
+end
+
+#--------------------------------------------------------
+
+function write_my_test(wt::Array{<:Integer, 1}, fitness_wt::Array{Any, 2}, 
+			dir_out::AbstractString = ""; wt_name::AbstractString = "WT")
+	
+	dir_out == "" && (  dir_out = (*).(split(path_wt, "/")[1:end-1])  )
+	path_MSA_out = joinpath(dir_out, "single_muts_MSA_$(wt_name).fasta")
+	path_fit_out = joinpath(dir_out, "single_muts_fitness_$(wt_name).fit")
+	vec_fit = []
+
+    l = 0
+	FastaWriter(path_MSA_out, "w") do file
+	    writeentry(file, "0 | $(wt_name)", vec2string(wt))
+        for k in 1:size(fitness_wt, 1)
+            
+	        mutant = copy(wt)
+            pos = fitness_wt[k, 1]
+            
+            old_amino_lettr = num2letter(wt[pos])
+            new_amino_lettr = fitness_wt[k, 2][1]
+            new_amino_num = letter2num(new_amino_lettr)
+            
+            mutant[pos] = new_amino_num
+            
+            if (new_amino_num != wt[pos])
+                l +=1
+                append!(vec_fit, fitness_wt[k, 3])
+                writeentry(file, "$l | $(old_amino_lettr)$(pos)$(new_amino_lettr)", vec2string(mutant))
+            end
+	    end
+	end
+
+	pushfirst!(vec_fit, 0)
+	writedlm(path_fit_out, vec_fit)
+end
