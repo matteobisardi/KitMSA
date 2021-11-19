@@ -202,7 +202,6 @@ function write_single_muts_MSA(path_wt::AbstractString, fitness_wt::Array{Union{
 	    end
 	end
 
-	vec_fit = [val for val in fitness_wt if (!ismissing(val)) && !iszero(val) ]
 	pushfirst!(vec_fit, 0)
 	writedlm(path_fit_out, vec_fit)
 end
