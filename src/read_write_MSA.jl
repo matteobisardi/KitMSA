@@ -168,10 +168,14 @@ end
 ##############################################################
 """
 	write_single_muts_MSA(path_wt::AbstractString, fitness_wt::Array{Union{Missing, Float64}}, 
-			dir_out::AbstractString = "", wt_name::AbstractString = "WT")
+			dir_out::AbstractString = ""; wt_name::AbstractString = "WT")
 	write_single_muts_MSA(wt::Array{<:Integer, 1}, fitness_wt::Array{Union{Missing, Float64}}, 
-			dir_out::AbstractString, wt_name::AbstractString = "WT")
-
+			dir_out::AbstractString; wt_name::AbstractString = "WT")
+	write_single_muts_MSA(path_wt::AbstractString, fitness_wt::Array{Any, 2}, 
+			dir_out::AbstractString = ""; wt_name::AbstractString = "WT")
+	write_single_muts_MSA(wt::Array{<:Integer, 1}, fitness_wt::Array{Any, 2}, 
+			dir_out::AbstractString = ""; wt_name::AbstractString = "WT")
+	
 	
         
     USE:
