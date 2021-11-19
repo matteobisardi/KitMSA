@@ -133,7 +133,7 @@ end
 
 #--------------------------------------------------------
 
-function vec2string(v::Array{:<Integer, 1})
+function vec2string(v::Array{<:Integer, 1})
     s = ""
     for i in v
         s = s*num2letter(i)
