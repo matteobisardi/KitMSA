@@ -245,7 +245,7 @@ function remove_gapped_cols(fastapath::AbstractString; outpath::AbstractString =
     end
 
     println("$(count_removed_cols) column$(plural_flag) with more than $(max_gaps) gaps ha$(verb_flag) been removed.")
-    return outpath
+    return outpath,col_to_rem
 end
 
 
