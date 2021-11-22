@@ -7,14 +7,13 @@ export remove_gapped_sequences, remove_close_seqs, remove_gapped_cols, afa2fasta
     (fastapath, kwargs..) --> outpath
         
     USE:
-    Given an amino acid sequence and a gap fraction, 
-    returns "true" if the number of gaps is bigger than the franction
-    and "false" otherwise.
+    Given an amino acid sequence and a number of gaps, 
+    returns "true" if the number of gaps in the sequence is bigger than threshold.
     
  	INPUT:
     "seq": amino acid sequence in numbers or letters format
     
-    "max_gaps": real number between 0 and 1
+    "max_gaps": real number between 0 and the sequence length
 
     OUTPUT:
 
@@ -211,7 +210,7 @@ function remove_gapped_cols(fastapath::AbstractString; outpath::AbstractString =
     MSA = fasta2matrix(fastapath)
     M, N = size(MSA)
             
-    col_to_rem = [col for col in 1:N if bool_gaps(MSA[:, col], (1-threshold)*M)]
+    col_to_rem = [col for col in 1:N if bool_gaps(MSA[:, col], threshold*M)]
     col_to_keep = [i for i in 1:N if i ∉ col_to_rem]
             
     max_gaps =  Int64(round(threshold*M, digits = 0))
