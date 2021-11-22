@@ -79,7 +79,7 @@ function remove_gapped_sequences(fastapath::AbstractString; outpath::AbstractStr
         dir, file = splitdir(fastapath)
         split_file = split(file, ".")
         l_file = length(split_file)
-        split_file[end-1] = split_file[end-1]*"$(frac_gaps)rowgaps"
+        split_file[end-1] = split_file[end-1]*"$_max(frac_gaps)rowgaps"
         outpath = joinpath(dir, join(split_file, "."))
     end
     
@@ -124,16 +124,14 @@ end
     "outpath": path of the resulting MSA, if not specified adds "_noclose"
     to the filename (before .file)
 
-    "threshold": fractional Hamming distance defyning a "radius of depletion"
-    in sequence space
-
+    "threshold": max allowed fractional sequence identity to the wts
     OUTPUT:
 
 """
 
 
 function remove_close_seqs(fastapath::AbstractString, wtpaths...; outpath::AbstractString = "", 
-    threshold::Real = 0.2)
+    threshold::Real = 0.8)
     N = 0
     n_wts = length(wtpaths)
     f = FastaReader(fastapath)
@@ -143,15 +141,15 @@ function remove_close_seqs(fastapath::AbstractString, wtpaths...; outpath::Abstr
     end
 
     if threshold <= 1
-        min_h_distance =  Int64(round(threshold*N, digits = 0))
-    else 
-        min_h_distance = threshold
+        max_hd =  Int64(round( threshold*N, digits = 0))
+        frac_close = Int64(round(threshold*100, digits = 0))
     end
+            
     if outpath == ""
         dir, file = splitdir(fastapath)
         split_file = split(file, ".")
         l_file = length(split_file)
-        split_file[end-1] = split_file[end-1]*"_noclose"
+                split_file[end-1] = split_file[end-1]*"_max$(frac_close)aminoid"
         outpath = joinpath(dir, join(split_file, "."))
     end
     
@@ -159,7 +157,7 @@ function remove_close_seqs(fastapath::AbstractString, wtpaths...; outpath::Abstr
 
     count_removed_seqs = 0
     for (desc, seq_string) in f
-        if prod((hamming.( [string2vec(seq_string) for i in 1:n_wts] , wts) .> [min_h_distance for i in 1:n_wts]))
+        if prod((hamming.( [string2vec(seq_string) for i in 1:n_wts] , wts) .< [max_hd for i in 1:n_wts]))
             writefasta(outpath, [(desc, seq_string)], "a")
         else
             count_removed_seqs += 1
@@ -188,7 +186,7 @@ end
 ##############################################################
 """
     function remove_gapped_cols(fastapath::AbstractString; outpath::AbstractString = "", 
-        threshold::Real = 0.75)
+        threshold::Real = 0.8)
 
     (fastapath, kwargs..) --> outpath
         
@@ -214,7 +212,7 @@ end
 
 
 
-function remove_gapped_cols(fastapath::AbstractString; outpath::AbstractString = "", threshold::Real = 0.25)
+function remove_gapped_cols(fastapath::AbstractString; outpath::AbstractString = "", threshold::Real = 0.8)
     MSA = fasta2matrix(fastapath)
     M, N = size(MSA)
             
@@ -228,7 +226,7 @@ function remove_gapped_cols(fastapath::AbstractString; outpath::AbstractString =
         dir, file = splitdir(fastapath)
         split_file = split(file, ".")
         l_file = length(split_file)
-                split_file[end-1] = split_file[end-1]*"$(frac_gaps)colgaps"
+                    split_file[end-1] = split_file[end-1]*"$_max(frac_gaps)colgaps"
         outpath = joinpath(dir, join(split_file, "."))
     end
     count_removed_cols = length(col_to_rem)
