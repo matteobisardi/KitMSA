@@ -79,7 +79,7 @@ function remove_gapped_sequences(fastapath::AbstractString; outpath::AbstractStr
         dir, file = splitdir(fastapath)
         split_file = split(file, ".")
         l_file = length(split_file)
-        split_file[end-1] = split_file[end-1]*"_max$(frac_gaps)rowgaps"
+        split_file[end-1] = split_file[end-1]*"_max0$(frac_gaps)rowgaps"
         outpath = joinpath(dir, join(split_file, "."))
     end
     
@@ -149,7 +149,7 @@ function remove_close_seqs(fastapath::AbstractString, wtpaths...; outpath::Abstr
         dir, file = splitdir(fastapath)
         split_file = split(file, ".")
         l_file = length(split_file)
-                split_file[end-1] = split_file[end-1]*"_max$(frac_close)aminoid"
+                split_file[end-1] = split_file[end-1]*"_max0$(frac_close)aminoid"
         outpath = joinpath(dir, join(split_file, "."))
     end
     
@@ -226,7 +226,7 @@ function remove_gapped_cols(fastapath::AbstractString; outpath::AbstractString =
         dir, file = splitdir(fastapath)
         split_file = split(file, ".")
         l_file = length(split_file)
-                    split_file[end-1] = split_file[end-1]*"_max$(frac_gaps)colgaps"
+                    split_file[end-1] = split_file[end-1]*"_max0$(frac_gaps)colgaps"
         outpath = joinpath(dir, join(split_file, "."))
     end
     count_removed_cols = length(col_to_rem)
