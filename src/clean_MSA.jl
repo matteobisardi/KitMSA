@@ -108,7 +108,7 @@ end
 ##############################################################
 """
     function remove_close_seqs(fastapath::AbstractString, wtpaths...; outpath::AbstractString = "", 
-    threshold::Real = 0.2)
+    threshold::Real = 0.8)
 
     (fastapath, kwargs..) --> outpath
         
