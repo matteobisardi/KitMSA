@@ -181,7 +181,7 @@ end
 ##############################################################
 """
     function remove_gapped_cols(fastapath::AbstractString; outpath::AbstractString = "", 
-        threshold::Real = 0.75, col_to_rem::Array{Int64, 1} = [])
+        threshold::Real = 0.75)
 
     (fastapath, kwargs..) --> outpath
         
@@ -201,22 +201,19 @@ end
 
     "threshold": fraction of gaps allowed in the MSA columns
 
-    "col_to_rem": the user can specify what columns he or she wants to remove.
-
     OUTPUT:
 
 """
 
 
 
-function remove_gapped_cols(fastapath::AbstractString; outpath::AbstractString = "", 
-        threshold::Real = 0.75, col_to_rem::Array{Int64, 1} = [])
+function remove_gapped_cols(fastapath::AbstractString; outpath::AbstractString = "", threshold::Real = 0.25)
     MSA = fasta2matrix(fastapath)
     M, N = size(MSA)
-    if col_to_rem == []
-        col_to_rem = [col for col in 1:N if bool_gaps(MSA[:, col], threshold*M)]
-    end
+            
+    col_to_rem = [col for col in 1:N if bool_gaps(MSA[:, col], (1-threshold)*M)]
     col_to_keep = [i for i in 1:N if i ∉ col_to_rem]
+            
     max_gaps =  Int64(round(threshold*M, digits = 0))
     max_gaps_name = "0"*string((Int64(round(threshold*100, digits = 2))))
     
