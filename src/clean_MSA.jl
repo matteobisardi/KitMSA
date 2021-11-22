@@ -24,7 +24,7 @@ export remove_gapped_sequences, remove_close_seqs, remove_gapped_cols, afa2fasta
 """
 
 bool_gaps(seq::String, max_gaps::Real) = sum([1 for l in seq if l == '-']) > max_gaps ? true : false
-bool_gaps(seq::Array{Float64, 1}, max_gaps::Real) = sum([1 for l in seq if l == 21 ]) > max_gaps ? true : false
+bool_gaps(seq::Array{<:Integer, 1}, max_gaps::Real) = sum([1 for l in seq if l == 21 ]) > max_gaps ? true : false
 
 
 
