@@ -54,8 +54,7 @@ bool_gaps(seq::Array{Float64, 1}, max_gaps::Real) = sum([1 for l in seq if l == 
 """
 
 
-function remove_gapped_sequences(fastapath::AbstractString, 
-        ;outpath::AbstractString = "" ,threshold::Real = 0.1)
+function remove_gapped_sequences(fastapath::AbstractString; outpath::AbstractString = "" ,threshold::Real = 0.1)
     N = 0
     f = FastaReader(fastapath)
     for (desc, seq_string) in f
