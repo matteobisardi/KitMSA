@@ -46,7 +46,7 @@ bool_gaps(seq::Array{<:Integer, 1}, max_gaps::Real) = sum([1 for l in seq if l =
     to the filename (before .file)
 
     "threshold": fraction of gaps allowed in the MSA,
-    an integer number is also accepted
+    an integer number is also accepted for the total number of gaps
 
     OUTPUT:
 
@@ -61,17 +61,25 @@ function remove_gapped_sequences(fastapath::AbstractString; outpath::AbstractStr
         break
     end
 
+    frac_gaps = 0
+    max_gaps = 0
     if threshold <= 1
+        frac_gaps = Int64(round(threshold*100, digits = 0))
         max_gaps =  Int64(round(threshold*N, digits = 0))
+               
     else 
+        frac_gaps = Int64(round((threshold/N)*100, digits = 0))
         max_gaps = threshold
+        
     end
+
+    
     
     if outpath == ""
         dir, file = splitdir(fastapath)
         split_file = split(file, ".")
         l_file = length(split_file)
-        split_file[end-1] = split_file[end-1]*"_max$(max_gaps)gaps"
+        split_file[end-1] = split_file[end-1]*"$(frac_gaps)rowgaps"
         outpath = joinpath(dir, join(split_file, "."))
     end
     
@@ -214,13 +222,13 @@ function remove_gapped_cols(fastapath::AbstractString; outpath::AbstractString =
     col_to_keep = [i for i in 1:N if i ∉ col_to_rem]
             
     max_gaps =  Int64(round(threshold*M, digits = 0))
-    max_gaps_name = "0"*string((Int64(round(threshold*100, digits = 2))))
-    
+    frac_gaps = Int64(round(threshold*100, digits = 0))
+                    
     if outpath == ""
         dir, file = splitdir(fastapath)
         split_file = split(file, ".")
         l_file = length(split_file)
-        split_file[end-1] = split_file[end-1]*"_frac$(max_gaps_name)colgaps"
+                split_file[end-1] = split_file[end-1]*"$(frac_gaps)colgaps"
         outpath = joinpath(dir, join(split_file, "."))
     end
     count_removed_cols = length(col_to_rem)
