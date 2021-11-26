@@ -149,7 +149,7 @@ function remove_close_seqs(fastapath::AbstractString, wtpaths...; outpath::Abstr
         dir, file = splitdir(fastapath)
         split_file = split(file, ".")
         l_file = length(split_file)
-                split_file[end-1] = split_file[end-1]*"_max0$(frac_close)aminoid"
+                split_file[end-1] = split_file[end-1]*"_max0$(frac_close)WTaminoid"
         outpath = joinpath(dir, join(split_file, "."))
     end
     
@@ -207,7 +207,7 @@ end
     "threshold": fraction of gaps allowed in the MSA columns
 
     OUTPUT:
-
+    outpupath and columns removed
 """
 
 
