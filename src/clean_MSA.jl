@@ -22,9 +22,10 @@ export remove_gapped_sequences, remove_close_seqs, remove_gapped_cols, afa2fasta
 
 """
 
+#--------------------------------------------------------
+
 bool_gaps(seq::String, max_gaps::Real) = sum([1 for l in seq if l == '-']) > max_gaps ? true : false
 bool_gaps(seq::Array{<:Integer, 1}, max_gaps::Real) = sum([1 for l in seq if l == 21 ]) > max_gaps ? true : false
-
 
 
 ##############################################################
@@ -52,6 +53,7 @@ bool_gaps(seq::Array{<:Integer, 1}, max_gaps::Real) = sum([1 for l in seq if l =
 
 """
 
+#--------------------------------------------------------
 
 function remove_gapped_sequences(fastapath::AbstractString; outpath::AbstractString = "" ,threshold::Real = 0.1)
     N = 0
@@ -129,6 +131,7 @@ end
 
 """
 
+#--------------------------------------------------------
 
 function remove_close_seqs(fastapath::AbstractString, wtpaths...; outpath::AbstractString = "", 
     threshold::Real = 0.8)
@@ -210,7 +213,7 @@ end
     outpupath and columns removed
 """
 
-
+#--------------------------------------------------------
 
 function remove_gapped_cols(fastapath::AbstractString; outpath::AbstractString = "", threshold::Real = 0.8)
     MSA = fasta2matrix(fastapath)
@@ -269,6 +272,8 @@ end
 
 """
 
+#--------------------------------------------------------                
+
 function afa2fasta(path_in::String, path_out::String = "")
     path_out == "" && (path_out = join( split(path_in, '.')[1:end-1], "."  )*"_removed_dels.fasta")
     f = FastaReader(path_in)
@@ -278,7 +283,6 @@ function afa2fasta(path_in::String, path_out::String = "")
     end
     close(f)
 end
-
 
 
 ##############################################################
@@ -299,6 +303,7 @@ end
 
 """
 
+#--------------------------------------------------------
 
 function remove_dels(string_wdel::String)
     clean_string = ""
@@ -313,11 +318,7 @@ function remove_dels(string_wdel::String)
     end
     return clean_string
 end
-
-
-                
-                
-                
+      
                 
 ##############################################################
 """
@@ -337,6 +338,8 @@ end
     OUTPUT:
 
 """
+        
+ #--------------------------------------------------------               
                 
 function matrix2fasta(path::AbstractString, MSA, desc_name::AbstractString = "")
     
