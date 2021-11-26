@@ -1,4 +1,4 @@
-export fasta2matrix, letter2num, num2letter
+export fasta2matrix, letter2num, num2letter, matrix2fasta
 
 ##############################################################
 ##############################################################
@@ -330,3 +330,46 @@ function write_single_muts_MSA(wt::Array{<:Integer, 1}, fitness_wt::Array{Any, 2
 	pushfirst!(vec_fit, 0)
 	writedlm(path_fit_out, vec_fit)
 end
+
+##############################################################
+"""
+    function matrix2fasta(path::AbstractString, MSA, desc_name::AbstractString = "")
+
+    (path, MSA) --> write MSA to path
+        
+    USE:
+    Given a vector or matrix of numbers representing an amino acid, write it in letter format to "path".
+
+
+    INPUT: 
+    "path": path of output
+    "MSA": matrix or vector of numbers (1 to 21 in the convention used here)
+    "desc_name": name of the sequence (works only if NOT an MSA)
+
+    OUTPUT:
+
+"""
+        
+ #--------------------------------------------------------               
+                
+function matrix2fasta(path::AbstractString, MSA, desc_name::AbstractString = "")
+    
+    M = size(MSA, 1)
+    
+    single_seq_flag = (length(size(MSA)) == 1)
+    
+    if single_seq_flag == true 
+        FastaWriter(path, "w") do file
+            desc_name == "" && (desc_name = "1")
+            writeentry(file, desc_name*"boh", vec2string(MSA) )
+        end
+    else
+        FastaWriter(path, "w") do file
+            for i in 1:M
+                seq = MSA[i, :]
+                writeentry(file, "$i", vec2string(seq) )
+            end
+        end
+    end
+end
+
