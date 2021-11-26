@@ -1,4 +1,4 @@
-export remove_gapped_sequences, remove_close_seqs, remove_gapped_cols, afa2fasta, matrix2fasta
+export remove_gapped_sequences, remove_close_seqs, remove_gapped_cols, afa2fasta
 
 ##############################################################
 """
