@@ -205,7 +205,7 @@ function remove_close_seqs(fastapath::AbstractString, wtpaths...; outpath::Abstr
         plural_flag_wt = "s"
     end
 
-    println("$(count_removed_seqs) sequence$(plural_flag) with less than $(min_h_distance) mutations wrt to the wildtype$(plural_flag_wt) ha$(verb_flag) been removed.")
+    println("$(count_removed_seqs) sequence$(plural_flag) with less than $(max_hd) mutations wrt to the wildtype$(plural_flag_wt) ha$(verb_flag) been removed.")
     return outpath
 end
 
