@@ -158,7 +158,7 @@ end
 
 #--------------------------------------------------------
 
-function remove_close_seqs_test(fastapath::AbstractString, wtpaths...; outpath::AbstractString = "", 
+function remove_close_seqs(fastapath::AbstractString, wtpaths...; outpath::AbstractString = "", 
     threshold::Real = 0.8)
     N = 0
     n_wts = length(wtpaths)
