@@ -30,6 +30,31 @@ bool_gaps(seq::Array{<:Integer, 1}, max_gaps::Real) = sum([1 for l in seq if l =
 
 ##############################################################
 """
+    function my_hamming(v1, v2)
+
+    (v1, v2) --> hamming distance
+        
+    USE:
+    Function used to compute the hamming distance between two vectors.
+    Works for strings as well.
+    
+    INPUT:
+
+
+    OUTPUT:
+
+    number between 0 and the length of the two vectors
+
+"""
+
+#--------------------------------------------------------
+
+my_hamming(v1, v2) = sum( [v1[i] .!= el_v2 for (i, el_v2) in enumerate(v2)] )
+
+
+
+##############################################################
+"""
     function remove_gapped_sequences(fastapath::AbstractString 
         ;outpath::AbstractString = "",threshold::Real = 0.1)
 
@@ -160,7 +185,7 @@ function remove_close_seqs(fastapath::AbstractString, wtpaths...; outpath::Abstr
 
     count_removed_seqs = 0
     for (desc, seq_string) in f
-        if prod((hamming.( [string2vec(seq_string) for i in 1:n_wts] , wts) .< [max_hd for i in 1:n_wts]))
+        if prod((my_hamming.( [string2vec(seq_string) for i in 1:n_wts] , wts) .< [max_hd for i in 1:n_wts]))
             writefasta(outpath, [(desc, seq_string)], "a")
         else
             count_removed_seqs += 1
