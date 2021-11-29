@@ -158,7 +158,7 @@ end
 
 #--------------------------------------------------------
 
-function remove_close_seqs(fastapath::AbstractString, wtpaths...; outpath::AbstractString = "", 
+function remove_close_seqs_test(fastapath::AbstractString, wtpaths...; outpath::AbstractString = "", 
     threshold::Real = 0.8)
     N = 0
     n_wts = length(wtpaths)
@@ -177,15 +177,14 @@ function remove_close_seqs(fastapath::AbstractString, wtpaths...; outpath::Abstr
         dir, file = splitdir(fastapath)
         split_file = split(file, ".")
         l_file = length(split_file)
-                split_file[end-1] = split_file[end-1]*"_max0$(frac_close)WTaminoid"
+        split_file[end-1] = split_file[end-1]*"_max0$(frac_close)wtid"
         outpath = joinpath(dir, join(split_file, "."))
     end
     
-    wts = [wt[1, :] for wt in fasta2matrix.(wtpaths)]
-
+    wts = [wt[:, 1] for wt in fasta2matrix.(wtpaths)]
     count_removed_seqs = 0
     for (desc, seq_string) in f
-        if prod((my_hamming.( [string2vec(seq_string) for i in 1:n_wts] , wts) .< [max_hd for i in 1:n_wts]))
+        if prod(  my_hamming.( [string2vec(seq_string) for i in 1:n_wts] , wts) .> [max_hd for i in 1:n_wts] )      
             writefasta(outpath, [(desc, seq_string)], "a")
         else
             count_removed_seqs += 1
@@ -208,6 +207,7 @@ function remove_close_seqs(fastapath::AbstractString, wtpaths...; outpath::Abstr
     println("$(count_removed_seqs) sequence$(plural_flag) with less than $(max_hd) mutations wrt to the wildtype$(plural_flag_wt) ha$(verb_flag) been removed.")
     return outpath
 end
+
 
 
 
