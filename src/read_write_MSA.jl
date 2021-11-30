@@ -361,7 +361,7 @@ function matrix2fasta(path::AbstractString, MSA, desc_name::AbstractString = "")
     if single_seq_flag == true 
         FastaWriter(path, "w") do file
             desc_name == "" && (desc_name = "1")
-            writeentry(file, desc_name*"boh", vec2string(MSA) )
+            writeentry(file, desc_name, vec2string(MSA) )
         end
     else
         FastaWriter(path, "w") do file
