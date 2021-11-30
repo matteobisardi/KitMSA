@@ -214,7 +214,7 @@ end
 ##############################################################
 """
     function remove_gapped_cols(fastapath::AbstractString; outpath::AbstractString = "", 
-        threshold::Real = 0.8)
+        threshold::Real = 0.8, only_flanks::Bool = false)
 
     (fastapath, kwargs..) --> outpath
         
@@ -240,12 +240,19 @@ end
 
 #--------------------------------------------------------
 
-function remove_gapped_cols(fastapath::AbstractString; outpath::AbstractString = "", threshold::Real = 0.8)
+function remove_gapped_cols(fastapath::AbstractString; outpath::AbstractString = "", threshold::Real = 0.8, only_flanks::Bool = false)
     MSA = fasta2matrix(fastapath)
     M, N = size(MSA)
-            
+    
     col_to_rem = [col for col in 1:N if bool_gaps(MSA[:, col], threshold*M)]
-    col_to_keep = [i for i in 1:N if i ∉ col_to_rem]
+    col_to_keep = [i for i in 1:N if i ∉ col_to_rem]                        
+                
+    if only_flanks == true             
+        col_to_rem = [col for col in 1:N if bool_gaps(MSA[:, col], threshold*M) && (N - col)%Int64(round(N*9/10, digits = 0)) < N/10    ]
+        col_to_keep = [i for i in 1:N if i ∉ col_to_rem]
+    end
+    
+            
             
     max_gaps =  Int64(round(threshold*M, digits = 0))
     frac_gaps = Int64(round(threshold*100, digits = 0))
