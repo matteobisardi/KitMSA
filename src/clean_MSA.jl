@@ -184,7 +184,7 @@ function remove_close_seqs(fastapath::AbstractString, wtpaths...; outpath::Abstr
     wts = [wt[:, 1] for wt in fasta2matrix.(wtpaths)]
     count_removed_seqs = 0
     for (desc, seq_string) in f
-        if prod(  my_hamming.( [string2vec(seq_string) for i in 1:n_wts] , wts) .< [seqID for i in 1:n_wts] )      
+        if prod(  N .- my_hamming.( [string2vec(seq_string) for i in 1:n_wts] , wts) .< [seqID for i in 1:n_wts] )      
             writefasta(outpath, [(desc, seq_string)], "a")
         else
             count_removed_seqs += 1
