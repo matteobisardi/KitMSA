@@ -169,7 +169,7 @@ function remove_close_seqs(fastapath::AbstractString, wtpaths...; outpath::Abstr
     end
 
     if threshold <= 1
-        max_hd =  Int64(round( threshold*N, digits = 0))
+        seqID =  Int64(round( threshold*N, digits = 0))
         frac_close = Int64(round(threshold*100, digits = 0))
     end
             
@@ -184,7 +184,7 @@ function remove_close_seqs(fastapath::AbstractString, wtpaths...; outpath::Abstr
     wts = [wt[:, 1] for wt in fasta2matrix.(wtpaths)]
     count_removed_seqs = 0
     for (desc, seq_string) in f
-        if prod(  my_hamming.( [string2vec(seq_string) for i in 1:n_wts] , wts) .> [max_hd for i in 1:n_wts] )      
+        if prod(  my_hamming.( [string2vec(seq_string) for i in 1:n_wts] , wts) .< [seqID for i in 1:n_wts] )      
             writefasta(outpath, [(desc, seq_string)], "a")
         else
             count_removed_seqs += 1
