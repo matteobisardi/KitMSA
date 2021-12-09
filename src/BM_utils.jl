@@ -1,4 +1,4 @@
-export extract_params, energy, delta_energy
+export extract_params, energy, delta_energy, dms_silico
 
 ######################################################
 """
@@ -20,6 +20,8 @@ export extract_params, energy, delta_energy
     "q": number of symbols allowed (21 for protein sequences, gaps included).
 
 """
+
+#-----------------------------------------------
 
 function read_par_BM(path::AbstractString, q::Integer = 21)	
     params = readdlm(path,' ', use_mmap = true)[:, 2:6]
@@ -100,6 +102,7 @@ end
 
 """
 
+#-----------------------------------------------
 
 function extract_params(path_par::AbstractString; q::Integer = 21)
 	!isfile(path_par) && error("Error: the file \"$(path_par)\" does not exist. Please check the spelling or the folder path.")
@@ -151,6 +154,7 @@ end
 
 """
 
+#-----------------------------------------------
 
 function set_max_field_to_0(h_old::Array{Float64, 2})
    h_new = deepcopy(h_old)
@@ -176,6 +180,8 @@ end
     since J[a, b, i, j] = 0 if i < j, or viceversa, depends.
 
 """
+
+#-----------------------------------------------
 
 function symmetrize_J(J_old::Array{Float64, 4})
    J_s = deepcopy(J_old)
@@ -222,6 +228,8 @@ end
     Energy
 """
 
+#-----------------------------------------------
+
 function energy(h::Array{Float64,2},
                 J::Array{Float64,4},
                 S::Array{<:Integer, 1})
@@ -250,8 +258,6 @@ function energy(h::Array{Float64,2},
 
     return E
 end
-
-
 
 
 ###################################################### 
@@ -283,6 +289,8 @@ end
 
     Energy[S] - Energy[ref]
 """
+
+#-----------------------------------------------
 
 function delta_energy(h::Array{Float64,2},
                               J::Array{Float64,4},
@@ -323,3 +331,62 @@ end
 
 
 
+###################################################### 
+"""
+    dms_silico(h::Array{Float64,2}, 
+		J::Array{Float64,4}, 
+		wt::Array{<:Integer,1}; 
+		skipgap::Bool = false, 
+		skipsyn::Bool = false, 
+		no_df = false)
+
+    (h, J, wt) --> in silico DMS
+        
+    USE:
+    Given a sequence, computes the Deep Mutational Scanning in silico
+    and returns a dataframe with the output.
+
+
+
+    INPUT:
+    "h": fields in qxN format
+    "J": coulings in qxqxNxN format
+    "wt": sequence in number format (" 1 2 .. 21 <--> A C -  ")
+
+    optional:
+	"skipgap": dont'return gapped positions
+	"skisyn": dont't return synonimus mutations (ΔE = 0)
+	"no_df": return only a vector
+
+    OUTPUT:
+    Dataframe in the following format
+	
+    :res    :wt_amino  :wt_var  :ΔE
+    ________________________________
+      x         x         x      x
+
+"""
+
+#-----------------------------------------------
+
+function dms_silico(h::Array{Float64,2}, J::Array{Float64,4}, wt::Array{<:Integer,1}; skipgap::Bool = false, skipsyn::Bool = false, no_df = false)
+    L = length(wt)
+    
+    dms = DataFrame(res = Int64.(zeros(L*20)), wt_amino = Int64.(zeros(L*20)), 
+        var_amino = Int64.(zeros(L*20)),  ΔE = zeros(L*20) )
+    allowmissing!(dms)
+    for res in 1:L
+        for amino in 1:20
+            seq = copy(wt)
+            wt_amino = wt[res]
+            seq[res] = amino
+            ΔE = delta_energy(h, J, seq, wt)
+            wt[res] == 21 && (ΔE = missing)
+            dms[(res-1)*20 + amino, :] .= [res,wt_amino, amino, ΔE]
+        end 
+    end
+    dms = skipgap ? dropmissing!(dms) : dms
+    dms = skipsyn ? dms[dms[:, :wt_amino] .!= dms[:, :var_amino], :] : dms
+    dms = no_df ? dms[:, :ΔE] : dms
+    return dms
+end
