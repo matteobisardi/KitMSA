@@ -245,7 +245,7 @@ function energy(h::Array{Float64,2},
     
     E = zeros(M)
     for i in 1:M
-      E[i] = energy(h, J, MSA[i, :])
+      E[i] = energy(h, J, S[i, :])
     end
 
     return E
