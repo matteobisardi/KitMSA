@@ -1,6 +1,6 @@
 module KitMSA
 		
-
+using DataFrames
 using DelimitedFiles
 using FastaIO
 using StatsBase
