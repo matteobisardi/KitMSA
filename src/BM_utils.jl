@@ -354,9 +354,9 @@ end
     "wt": sequence in number format (" 1 2 .. 21 <--> A C -  ")
 
     optional:
-	"skipgap": dont'return gapped positions
-	"skisyn": dont't return synonimus mutations (ΔE = 0)
-	"no_df": return only a vector
+	"skipgap": do not return gapped positions
+	"skisyn":  do not return synonimus mutations (ΔE = 0)
+	"no_df":   return only a vector
 
     OUTPUT:
     Dataframe in the following format
