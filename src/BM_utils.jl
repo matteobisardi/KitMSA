@@ -369,7 +369,7 @@ end
 
 #-----------------------------------------------
 
-function dms_silico(h::Array{Float64,2}, J::Array{Float64,4}, wt::Array{<:Integer,1}; skipgap::Bool = false, skipsyn::Bool = false, no_df = false)
+function dms_silico(h::Array{Float64,2}, J::Array{Float64,4}, wt::Array{<:Integer,1}; skipgap::Bool = false, skipsyn::Bool = false, df = true)
     L = length(wt)
     
     dms = DataFrame(res = Int64.(zeros(L*20)), wt_amino = Int64.(zeros(L*20)), 
@@ -387,6 +387,6 @@ function dms_silico(h::Array{Float64,2}, J::Array{Float64,4}, wt::Array{<:Intege
     end
     dms = skipgap ? dropmissing!(dms) : dms
     dms = skipsyn ? dms[dms[:, :wt_amino] .!= dms[:, :var_amino], :] : dms
-    dms = no_df ? dms[:, :ΔE] : dms
+    dms = df ? dms : dms[:, :ΔE]
     return dms
 end
