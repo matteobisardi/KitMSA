@@ -1,4 +1,4 @@
-export read_non_aligned_sequence, write_mapped_contacts, PPV
+export read_non_aligned_sequence, write_mapped_contacts, score_BM, PPV
 
 ##############################################################
 """
