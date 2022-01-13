@@ -12,7 +12,7 @@ export read_non_aligned_sequence, write_mapped_contacts, PPV
     as well as the sequence without the path.
     
  	INPUT:
-    "seq": amino acid sequence or path to it
+    `seq`: amino acid sequence or path to it
 
     OUTPUT:
     String
@@ -55,7 +55,7 @@ end
     3              -->  2
     
  	INPUT:
-    "seq": amino acid sequence with insertions 
+    - `seq`: amino acid sequence with insertions 
 
     OUTPUT:
     Dictionary
@@ -100,12 +100,12 @@ end
     writes a new distance file with mapped position numbers. 
 
  	INPUT:
-    "afa": amino acid sequence with insertions 
+    - `afa`: amino acid sequence with insertions 
 
-    "old_distance_path": path of amino acid distances from crystal data
-    "old_distances": array with pairs of positions and residue distances
+    - `old_distance_path`: path of amino acid distances from crystal data
+    - `old_distances`: array with pairs of positions and residue distances
 
-    "path_out": output path, if not declared will be the same of "old_distances_path"
+    - `path_out`: output path, if not declared will be the same of "old_distances_path"
 
     OUTPUT:
     Nothing
@@ -201,10 +201,10 @@ end
     The definition of contacts depends on linear amino acid distance and physical distance between residues.
 
     INPUT:
-    "scores": list of protein positions with a score
-    "distances": list of protein positions with physical distance
-    "amino_dist": threshold in terms of linear amino acid distance
-    "atom_dist": threshold in terms of physical distance
+    - `scores`: list of protein positions with a score
+    - `distances`: list of protein positions with physical distance
+    - `amino_dist`: threshold in terms of linear amino acid distance
+    - `atom_dist`: threshold in terms of physical distance
 
     OUTPUT:
     PPV vector
@@ -242,6 +242,82 @@ function PPV(scores::Array{Float64,2}, distances::Array{Float64,2}; amino_dist =
     return TP
 end
 
+##############################################################
+
+"""
+    score_BM(J::Array{Float64,2}; APC::Bool = true, gap::Bool = false)
+    score_BM(path_param::AbstractString; APC::Bool = true, gap::Bool = false)
+
+    (J) --> scores
+    (path_param) --> scores
+
+    USE:
+    Compute Frobenius norm of `q x q` blocks in matrix `J` and adds APC correction.
+    This is to use the DCA model as a contact prediction predictor.
+
+    INPUT:
+    - `J`: coupling matrix in `q x q x L x L` format
+    - `path_param`: path of fields and couplings parameters
+    - `APC`: apply the famous APC correction. Default to `true`.
+    - `gap`: Remove the state `21` from the Frobenius norm. Default to `false`. 
+
+    OUTPUT:
+    scores
+
+"""
+
+#-----------------------------------------------
+
+function score_BM(path_param::AbstractString; APC::Bool = true, gap::Bool = false)
+    h, J = extract_params(path_param)
+    q = size(J, 1)
+    L = size(J, 4)
+
+    println("Size of input matrix is ",size(J))
+
+    S = zeros(Float64, L,L)
+    for i in 1:L-1
+        for j in i+1 : L
+            S[i,j] = gap ? sqrt(sum(J[:, : ,i, j].^2)) : sqrt(sum(J[1:20, 1:20, i, j].^2))
+            S[j,i] = S[i,j]
+        end
+    end
+
+    F = zeros(Float64, convert(Int64, L*(L-1)/2),3)
+    pos = 1
+    for i in 1:L
+        for j in i+1:L
+            F[pos,:] = [i,j,S[i,j] - ( sum(S[:,j])/L * sum( S[:,i])/L ) / (sum(S)/(L^2)) * APC]
+            pos += 1
+        end
+    end
+    
+    return F
+end
 
 
+function score_BM(J::Array{Float64,4}; APC::Bool = true, gap::Bool = false)
+    q = size(J, 1)
+    L = size(J, 4)
 
+    println("Size of input matrix is ",size(J))
+
+    S = zeros(Float64, L,L)
+    for i in 1:L-1
+        for j in i+1 : L
+            S[i,j] = gap ? sqrt(sum(J[:, : ,i, j].^2)) : sqrt(sum(J[1:20, 1:20, i, j].^2))
+            S[j,i] = S[i,j]
+        end
+    end
+
+    F = zeros(Float64, convert(Int64, L*(L-1)/2),3)
+    pos = 1
+    for i in 1:L
+        for j in i+1:L
+            F[pos,:] = [i,j,S[i,j] - ( sum(S[:,j])/L * sum( S[:,i])/L ) / (sum(S)/(L^2)) * APC]
+            pos += 1
+        end
+    end
+    
+    return F
+end
