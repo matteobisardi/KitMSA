@@ -352,7 +352,7 @@ end
         
  #--------------------------------------------------------               
                 
-function matrix2fasta(path::AbstractString, MSA, desc_name::AbstractString = "")
+function matrix2fasta(path::AbstractString, MSA, desc_name::AbstractString = "", start_index = 1)
     
     M = size(MSA, 1)
     
@@ -364,10 +364,12 @@ function matrix2fasta(path::AbstractString, MSA, desc_name::AbstractString = "")
             writeentry(file, desc_name, vec2string(MSA) )
         end
     else
+	seq_index = start_index
         FastaWriter(path, "w") do file
             for i in 1:M
                 seq = MSA[i, :]
-                writeentry(file, "$i", vec2string(seq) )
+                writeentry(file, "$(seq_index) $(desc_name)", vec2string(seq) )
+		seq_index +=1
             end
         end
     end
