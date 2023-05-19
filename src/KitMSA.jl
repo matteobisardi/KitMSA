@@ -28,8 +28,7 @@ cod2amino = Dict( "ATA" => Int8(8), "ATC" => Int8(8), "ATT"=> Int8(8), "ATG"=> I
         "GGA"=>Int8(6), "GGC"=>Int8(6), "GGG"=>Int8(6), "GGT"=>Int8(6), 
         "TCA"=>Int8(16), "TCC"=>Int8(16), "TCG"=>Int8(16), "TCT"=>Int8(16), 
         "TTC"=>Int8(5), "TTT"=>Int8(5), "TTA"=>Int8(10), "TTG"=>Int8(10), 
-        "TAC"=>Int8(20), "TAT"=>Int8(20), "TAA"=> Int8(21), "TAG"=> Int8(21), 
-        "TGC"=> Int8(2), "TGT"=>Int8(2) , "TGA"=> Int8(21), "TGG"=> Int8(19), 
+        "TAC"=>Int8(20), "TAT"=>Int8(20), "TGC"=> Int8(2), "TGT"=>Int8(2) , "TGG"=> Int8(19), 
         "---" => Int8(21) )
 
 amino2cod = Dict()
